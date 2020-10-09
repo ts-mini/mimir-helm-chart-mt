@@ -1,5 +1,9 @@
 # Cortex Multitenant Add On Chart
 
+cortex:
+  # Set this to the name of the release for your cortex deployment
+  # It must be the same for things to wire up properly
+  releaseName: cortex
 
 ingress:
   annotations: {}
@@ -15,33 +19,29 @@ ingress:
 
   # for adding alertmanager endpoints
   alertmanager:
+    enabled: false
     scopeIDs:
-      - scopeName: infra
-        scopeID: "0"
-      - scopeName: dev
-        scopeID: "1"
+      - scopeName: defaultScope
+        scopeID: "defaultScopeID"
 
   distributor:
     enabled: false
-    scopeIDs:
-      - scopeName: infra
-        scopeID: "0"
-        annotations:
-          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-          nginx.ingress.kubernetes.io/ssl-redirect: "true"
-          kubernetes.io/ingress.class: nginx
-          nginx.ingress.kubernetes.io/auth-type: basic
-          nginx.ingress.kubernetes.io/auth-secret: cortex-basic-auth-prom-push
-          nginx.ingress.kubernetes.io/auth-secret-type: auth-map
-        host: cortex-infra-push.infra.alto.com
-        paths:
-          - /api/prom/push
-        tls:
-          secretName: wildcard-alto-com
-          host: cortex-infra-push.infra.alto.com
-
-auth:
-  defaultScope: "0"
+    # scopeIDs:
+    #   - scopeName: infra
+    #     scopeID: "0"
+    #     annotations: {}
+    #       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    #       # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    #       # kubernetes.io/ingress.class: nginx
+    #       # nginx.ingress.kubernetes.io/auth-type: basic
+    #       # nginx.ingress.kubernetes.io/auth-secret: cortex-basic-auth-prom-push
+    #       # nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+    #     # host: chart.local
+    #     # paths:
+    #     #   - /api/prom/push
+    #     # tls:
+    #     #   secretName: example-tls
+    #     #   host: chart.local
 
 nginx:
   enabled: true
@@ -51,9 +51,9 @@ nginx:
     dnsResolver: kube-dns.kube-system.svc.cluster.local
   image:
     repository: nginx
-    tag: 1.17
+    tag: 1.19
     pullPolicy: IfNotPresent
-
+    #pullSecrets:
   service:
     annotations: {}
     labels: {}
@@ -113,3 +113,9 @@ nginx:
   extraVolumes: []
   extraVolumeMounts: []
   extraPorts: []
+
+
+
+config:
+  server:
+    http_listen_port: 8080

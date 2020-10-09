@@ -1,7 +1,7 @@
 {{- $root := . -}}
-{{- $svcPort := .Values.distributor.service.port -}}
-{{- if .Values.distributor.ingresses.enabled -}}
-{{- range .Values.distributor.ingresses.scopeIDs }}
+{{- $svcPort := .Values.config.server.http_listen_port -}}
+{{- if and .Values.ingress.enabled .Values.nginx.enabled .Values.ingress.distributor.enabled -}}
+{{- range .Values.ingress.distributor.scopeIDs }}
 {{- $rootScope := . -}}
 {{- if semverCompare ">=1.14-0" $root.Capabilities.KubeVersion.GitVersion -}}
 ---

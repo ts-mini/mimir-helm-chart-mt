@@ -23,31 +23,23 @@ ingress:
 
 This will disable nginx and ingress from `cortex-helm-chart` and we will configure these in this chart.
 
+### Requirements
 
+- You must deploy this in the same namespace as cortex.
+- You must set cortex.releaseName to the value you set for cortex-helm-chart deployment
+- ingress, nginx are default to false, but this chart is pretty worthless without them - so setup ingress
 
 ## Chart Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| auth.defaultScope | string | `"0"` |  |
-| ingress.alertmanager.scopeIDs[0].scopeID | string | `"0"` |  |
-| ingress.alertmanager.scopeIDs[0].scopeName | string | `"infra"` |  |
-| ingress.alertmanager.scopeIDs[1].scopeID | string | `"1"` |  |
-| ingress.alertmanager.scopeIDs[1].scopeName | string | `"dev"` |  |
+| config.server.http_listen_port | int | `8080` |  |
+| cortex.releaseName | string | `"cortex"` |  |
+| ingress.alertmanager.enabled | bool | `false` |  |
+| ingress.alertmanager.scopeIDs[0].scopeID | string | `"defaultScopeID"` |  |
+| ingress.alertmanager.scopeIDs[0].scopeName | string | `"defaultScope"` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.distributor.enabled | bool | `false` |  |
-| ingress.distributor.scopeIDs[0].annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
-| ingress.distributor.scopeIDs[0].annotations."nginx.ingress.kubernetes.io/auth-secret" | string | `"cortex-basic-auth-prom-push"` |  |
-| ingress.distributor.scopeIDs[0].annotations."nginx.ingress.kubernetes.io/auth-secret-type" | string | `"auth-map"` |  |
-| ingress.distributor.scopeIDs[0].annotations."nginx.ingress.kubernetes.io/auth-type" | string | `"basic"` |  |
-| ingress.distributor.scopeIDs[0].annotations."nginx.ingress.kubernetes.io/force-ssl-redirect" | string | `"true"` |  |
-| ingress.distributor.scopeIDs[0].annotations."nginx.ingress.kubernetes.io/ssl-redirect" | string | `"true"` |  |
-| ingress.distributor.scopeIDs[0].host | string | `"cortex-infra-push.infra.alto.com"` |  |
-| ingress.distributor.scopeIDs[0].paths[0] | string | `"/api/prom/push"` |  |
-| ingress.distributor.scopeIDs[0].scopeID | string | `"0"` |  |
-| ingress.distributor.scopeIDs[0].scopeName | string | `"infra"` |  |
-| ingress.distributor.scopeIDs[0].tls.host | string | `"cortex-infra-push.infra.alto.com"` |  |
-| ingress.distributor.scopeIDs[0].tls.secretName | string | `"wildcard-alto-com"` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.hosts[0].host | string | `"chart.local"` |  |
 | ingress.hosts[0].paths[0] | string | `"/"` |  |
@@ -65,7 +57,7 @@ This will disable nginx and ingress from `cortex-helm-chart` and we will configu
 | nginx.http_listen_port | int | `80` |  |
 | nginx.image.pullPolicy | string | `"IfNotPresent"` |  |
 | nginx.image.repository | string | `"nginx"` |  |
-| nginx.image.tag | float | `1.17` |  |
+| nginx.image.tag | float | `1.19` |  |
 | nginx.initContainers | list | `[]` |  |
 | nginx.livenessProbe.httpGet.path | string | `"/healthz"` |  |
 | nginx.livenessProbe.httpGet.port | string | `"http-metrics"` |  |
