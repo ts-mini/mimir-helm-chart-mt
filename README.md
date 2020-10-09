@@ -8,7 +8,7 @@ Source code can be found [here](https://cortexmetrics.io/)
 
 ## Overview
 
-Cortex doesn't have an opinion on an authgateway/multitenant solution at this time.  This chart is meant to be deployed in addition to https://github.com/cortexproject/cortex-helm-chart.  This will configure a few key parts of your cortex config to allow for multi-tenancy-as-config.  This DOES expose implementation details of "auth" for cortex - so beware.  As of writing - this is configured for nginx ingress, nothing else.
+Cortex doesn't have an opinion on an authgateway/multitenant solution at this time.  This chart is meant to be deployed in addition to https://github.com/cortexproject/cortex-helm-chart.  This will configure a few key parts of your cortex config to allow for multi-tenancy-as-config.  This DOES expose implementation details of "auth" for cortex - so beware.  As of writing - this is configured for nginx ingress, nothing else. (Context: https://github.com/cortexproject/cortex-helm-chart/pull/57)
 
 ## Use
 
