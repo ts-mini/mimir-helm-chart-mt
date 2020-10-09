@@ -1,0 +1,14 @@
+apiVersion: v2
+version: 0.0.1
+appVersion: v1.1.0
+description: 'Cortex MultiTenant'
+engine: gotpl
+home: https://cortexmetrics.io/
+icon: https://avatars2.githubusercontent.com/u/43045022?s=200&v=4
+kubeVersion: ^1.10.0-0
+maintainers:
+- email: tyler.horvath@gmail.com
+  name: Tyler Horvath
+name: cortex-mt
+sources:
+- https://github.com/ts-mini/cortex-helm-chart-mt

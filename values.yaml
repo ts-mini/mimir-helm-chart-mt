@@ -1,0 +1,115 @@
+# Cortex Multitenant Add On Chart
+
+
+ingress:
+  annotations: {}
+  enabled: false
+  hosts:
+    - host: "chart.local"
+      paths:
+        - /
+  tls:
+    - hosts:
+        - chart.local
+      secretName: tls-example
+
+  # for adding alertmanager endpoints
+  alertmanager:
+    scopeIDs:
+      - scopeName: infra
+        scopeID: "0"
+      - scopeName: dev
+        scopeID: "1"
+
+  distributor:
+    enabled: false
+    scopeIDs:
+      - scopeName: infra
+        scopeID: "0"
+        annotations:
+          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+          nginx.ingress.kubernetes.io/ssl-redirect: "true"
+          kubernetes.io/ingress.class: nginx
+          nginx.ingress.kubernetes.io/auth-type: basic
+          nginx.ingress.kubernetes.io/auth-secret: cortex-basic-auth-prom-push
+          nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+        host: cortex-infra-push.infra.alto.com
+        paths:
+          - /api/prom/push
+        tls:
+          secretName: wildcard-alto-com
+          host: cortex-infra-push.infra.alto.com
+
+auth:
+  defaultScope: "0"
+
+nginx:
+  enabled: true
+  replicas: 2
+  http_listen_port: 80
+  config:
+    dnsResolver: kube-dns.kube-system.svc.cluster.local
+  image:
+    repository: nginx
+    tag: 1.17
+    pullPolicy: IfNotPresent
+
+  service:
+    annotations: {}
+    labels: {}
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 16Mi
+
+  ## Additional Cortex container arguments, e.g. log level (debug, info, warn, error)
+  extraArgs:
+    {}
+    # log.level: debug
+
+  ## Pod Labels
+  podLabels: {}
+
+  ## Pod Annotations
+  podAnnotations:
+    prometheus.io/scrape: ''
+    prometheus.io/port: 'http-metrics'
+
+  nodeSelector: {}
+  affinity: {}
+  annotations: {}
+  persistence:
+    subPath:
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http-metrics
+    initialDelaySeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: http-metrics
+    initialDelaySeconds: 10
+
+  securityContext: {}
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+
+  terminationGracePeriodSeconds: 10
+
+  tolerations: []
+  podDisruptionBudget: {}
+  initContainers: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  extraPorts: []

@@ -1,0 +1,43 @@
+{{- $root := . -}}
+{{- $svcPort := .Values.distributor.service.port -}}
+{{- if .Values.distributor.ingresses.enabled -}}
+{{- range .Values.distributor.ingresses.scopeIDs }}
+{{- $rootScope := . -}}
+{{- if semverCompare ">=1.14-0" $root.Capabilities.KubeVersion.GitVersion -}}
+---
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ template "cortex.fullname" $root }}-{{ .scopeName }}
+  labels:
+    app: {{ template "cortex.name" $root }}
+    chart: {{ template "cortex.chart" $root }}
+    release: {{ $root.Release.Name }}
+    heritage: {{ $root.Release.Service }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Org-ScopeID {{ $rootScope.scopeID }};
+  {{- end }}
+spec:
+{{- if .tls }}
+  tls:
+    - hosts:
+        - {{ .tls.host | quote }}
+      secretName: {{ .tls.secretName }}
+{{- end }}
+  rules:
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          - path: /api/prom/push
+            backend:
+              serviceName: {{ template "cortex.fullname" $root }}
+              servicePort: {{ $svcPort }}
+---
+{{- end }}
+{{- end }}
