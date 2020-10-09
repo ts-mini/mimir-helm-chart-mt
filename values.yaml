@@ -117,5 +117,6 @@ nginx:
 
 
 config:
+  auth_enabled: true
   server:
     http_listen_port: 8080
