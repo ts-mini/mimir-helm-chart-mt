@@ -1,0 +1,68 @@
+cortex:
+  releaseName: cortex
+
+ingress:
+  enabled: true
+  annotations:
+    # Custom ingress controller with
+    # internal ELB
+    kubernetes.io/ingress.class: nginx-cortex
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  defaultScope: "scope1metrics"
+  hosts:
+    - host: "cortex.example.com"
+      paths:
+        - /
+  tls:
+    - hosts:
+        - cortex.example.com
+      secretName: tls-name
+
+  alertmanager:
+    enabled: true
+    scopeIDs:
+      - scopeName: scope1
+        scopeID: "scope1metrics"
+      - scopeName: scope2
+        scopeID: "scope2metrics"
+
+  distributor:
+    enabled: true
+    # This allows us to have basic auth (even though its internal)
+    scopeIDs:
+      - scopeName: scope1
+        scopeID: "scope1metrics"
+        annotations:
+          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+          nginx.ingress.kubernetes.io/ssl-redirect: "true"
+          kubernetes.io/ingress.class: nginx
+          nginx.ingress.kubernetes.io/auth-type: basic
+          nginx.ingress.kubernetes.io/auth-secret: cortex-basic-auth-prom-push
+          nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+        host: cortex-scope1-push.example.com
+        paths:
+          - /api/prom/push
+        tls:
+          secretName: tls-name
+          host: cortex-scope1-push.example.com
+      - scopeName: scope2
+        scopeID: "scope2metrics"
+        annotations:
+          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+          nginx.ingress.kubernetes.io/ssl-redirect: "true"
+          kubernetes.io/ingress.class: nginx
+          nginx.ingress.kubernetes.io/auth-type: basic
+          nginx.ingress.kubernetes.io/auth-secret: cortex-basic-auth-prom-push
+          nginx.ingress.kubernetes.io/auth-secret-type: auth-map
+        host: cortex-scope2-push.example.com
+        paths:
+          - /api/prom/push
+        tls:
+          secretName: tls-name
+          host: cortex-scope2-push.example.com
+
+nginx:
+  enabled: true
+  replicas: 2
+

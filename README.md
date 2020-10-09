@@ -23,6 +23,8 @@ ingress:
 
 This will disable nginx and ingress from `cortex-helm-chart` and we will configure these in this chart.
 
+I've added an `example.yaml` that is similar to our configuration - with names just chosen to be random things. Feel free to use this as a starting point.
+
 ### Requirements
 
 - You must deploy this in the same namespace as cortex.
