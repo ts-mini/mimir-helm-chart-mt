@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- $svcPort := .Values.config.server.http_listen_port -}}
+{{- $svcPort := .Values.nginx.http_listen_port -}}
 {{- if and .Values.ingress.enabled .Values.nginx.enabled .Values.ingress.distributor.enabled -}}
 {{- range .Values.ingress.distributor.scopeIDs }}
 {{- $rootScope := . -}}
