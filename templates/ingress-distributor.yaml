@@ -21,7 +21,7 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header X-Org-ScopeID {{ $rootScope.scopeID }};
+      proxy_set_header X-Scope-OrgID {{ $rootScope.scopeID }};
   {{- end }}
 spec:
 {{- if .tls }}
