@@ -30,8 +30,8 @@ data:
       tcp_nopush   on;
       resolver {{ default "kube-dns.kube-system.svc.cluster.local" .Values.nginx.config.dnsResolver }};
 {{- if .Values.config.auth_enabled }}
-      map $http_x_org_scopeid $scopeid {
-            default   $http_x_org_scopeid;
+      map $http_x_scope_orgid $scopeid {
+            default   $http_x_scope_orgid;
             ""        "{{ .Values.ingress.defaultScope }}";
       }
 {{- end }}
