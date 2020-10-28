@@ -95,6 +95,16 @@ data:
         location ~ /ruler/ring {
           proxy_pass      http://{{ template "cortex.fullname" . }}-ruler.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
+
+        # Storage Gateway Config
+        location ~ /store-gateway/ring {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-store-gateway-headless.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
+        # Compactor Config
+        location ~ /compactor/ring {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-compactor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
       }
     }
 {{- end }}
