@@ -60,10 +60,6 @@ data:
           proxy_pass      http://{{ template "cortex.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
-        location ~ /api/prom/.* {
-          proxy_pass      http://{{ template "cortex.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
-        }
-
         # Alertmanager Config
         location ~ /api/v1/alerts {
           proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
@@ -87,6 +83,8 @@ data:
         }
 {{- end }}
 
+
+
         # Ruler Config
         location ~ /api/v1/rules {
           proxy_pass      http://{{ template "cortex.fullname" . }}-ruler.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
@@ -104,6 +102,16 @@ data:
         # Compactor Config
         location ~ /compactor/ring {
           proxy_pass      http://{{ template "cortex.fullname" . }}-compactor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
+        # Config Config
+        location ~ /api/prom/configs/.* {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-configs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
+        # Query Config
+        location ~ /api/prom/.* {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
       }
     }
