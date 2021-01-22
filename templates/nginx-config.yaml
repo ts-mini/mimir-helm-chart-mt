@@ -60,7 +60,7 @@ data:
           proxy_pass      http://{{ template "cortex.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
-        location = /ha_tracker {
+        location = /distributor/ha_tracker {
           proxy_pass      http://{{ template "cortex.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
