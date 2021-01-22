@@ -4,6 +4,10 @@ cortex:
   # Set this to the name of the release for your cortex deployment
   # It must be the same for things to wire up properly
   releaseName: cortex
+  config:
+    api:
+      prometheus_http_prefix: /prometheus
+
 
 ingress:
   annotations: {}
