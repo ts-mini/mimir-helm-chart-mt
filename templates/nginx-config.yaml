@@ -79,6 +79,14 @@ data:
           proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
+        location ~ /multitenant_alertmanager/configs {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
+        location ~ /multitenant_alertmanager/ring {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
 {{- $root := . }}
 {{- range .Values.ingress.alertmanager.scopeIDs }}
 {{ $rootScope := . }}
