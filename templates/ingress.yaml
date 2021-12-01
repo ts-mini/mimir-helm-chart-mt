@@ -1,7 +1,7 @@
 {{- if and .Values.ingress.enabled .Values.nginx.enabled -}}
 {{- $fullName := include "cortex.fullname" . -}}
 {{- $svcPort := .Values.nginx.http_listen_port -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -15,6 +15,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
 {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}
@@ -32,9 +33,12 @@ spec:
         paths:
         {{- range .paths }}
           - path: {{ . }}
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
         {{- end }}
   {{- end }}
 {{- end }}

@@ -11,6 +11,7 @@ cortex:
 
 ingress:
   annotations: {}
+  ingressClassName: nginx
   enabled: false
   hosts:
     - host: "chart.local"

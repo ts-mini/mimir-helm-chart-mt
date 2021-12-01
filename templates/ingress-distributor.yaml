@@ -3,12 +3,8 @@
 {{- if and .Values.ingress.enabled .Values.nginx.enabled .Values.ingress.distributor.enabled -}}
 {{- range .Values.ingress.distributor.scopeIDs }}
 {{- $rootScope := . -}}
-{{- if semverCompare ">=1.14-0" $root.Capabilities.KubeVersion.GitVersion -}}
 ---
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "cortex.fullname" $root }}-{{ .scopeName }}
@@ -24,6 +20,7 @@ metadata:
       proxy_set_header X-Scope-OrgID {{ $rootScope.scopeID }};
   {{- end }}
 spec:
+  ingressClassName: {{ $root.Values.ingress.ingressClassName }}
 {{- if .tls }}
   tls:
     - hosts:
@@ -35,9 +32,11 @@ spec:
       http:
         paths:
           - path: /api/prom/push
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ template "cortex.fullname" $root }}
-              servicePort: {{ $svcPort }}
----
+              service:
+                name: {{ template "cortex.fullname" $root }}
+                port:
+                  number: {{ $svcPort }}
 {{- end }}
 {{- end }}
