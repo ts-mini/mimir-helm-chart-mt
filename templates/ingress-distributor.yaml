@@ -38,5 +38,6 @@ spec:
                 name: {{ template "cortex.fullname" $root }}
                 port:
                   number: {{ $svcPort }}
+---
 {{- end }}
 {{- end }}

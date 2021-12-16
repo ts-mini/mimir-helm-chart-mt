@@ -128,6 +128,10 @@ data:
           proxy_pass      http://{{ template "cortex.fullname" . }}-ruler.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
+        location ~ /api/prom/rules/.* {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
         location = /prometheus/api/v1/rules {
           proxy_pass      http://{{ template "cortex.fullname" . }}-ruler.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
