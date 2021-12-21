@@ -56,7 +56,7 @@ nginx:
     dnsResolver: kube-dns.kube-system.svc.cluster.local
   image:
     repository: nginx
-    tag: 1.19
+    tag: 1.21
     pullPolicy: IfNotPresent
     #pullSecrets:
   service:
