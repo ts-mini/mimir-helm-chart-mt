@@ -80,12 +80,33 @@ data:
           proxy_pass      http://{{ template "cortex.fullname" . }}-distributor.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
-        # Alertmanager Config
+        # Alertmanager Config (API)
+
+        location = /api/v2/status {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/$1;
+        }
+
+        location = /api/v2/silences {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/$request_uri;
+        }
+
+        location = /api/v2/receivers {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/$request_uri;
+        }
+
+        location = /api/v2/alerts {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/$request_uri;
+        }
 
         location ~ /api/prom/api/v1/alerts {
           proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
 
+        location ~ /api/prom/alertmanager/(.*) {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/$1;
+        }
+
+        # Cortex specific config block
         location = /api/v1/alerts {
           proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
         }
@@ -104,6 +125,10 @@ data:
 
         location = /alertmanager {
           proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}$request_uri;
+        }
+
+        location ~ /alertmanager/(.*) {
+          proxy_pass      http://{{ template "cortex.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.config.server.http_listen_port }}/api/prom/alertmanager/$1;
         }
 
         location = /alertmanager/ring {
@@ -132,8 +157,6 @@ data:
         }
 
 {{- end }}
-
-
 
         # Ruler Config
         location ~ /api/v1/rules {
