@@ -1,20 +1,19 @@
-# Cortex Multitenant Add On Chart
+# Mimir MT Chart
 
-cortex:
-  # Set this to the name of the release for your cortex deployment
-  # It must be the same for things to wire up properly
-  releaseName: cortex
-  config:
-    api:
-      prometheus_http_prefix: /prometheus
+mimir:
+  releaseName: mimir
+  serverHttpListenPort: 8080
+  alertmanagerHttpPrefix: /alertmanager
 
+global:
+  clusterDomain: cluster.local
 
 ingress:
   annotations: {}
   ingressClassName: nginx
   enabled: false
   hosts:
-    - host: "chart.local"
+    - host: 'chart.local'
       paths:
         - /
   tls:
@@ -27,7 +26,7 @@ ingress:
     enabled: false
     scopeIDs:
       - scopeName: defaultScope
-        scopeID: "defaultScopeID"
+        scopeID: 'defaultScopeID'
 
   distributor:
     enabled: false
@@ -39,7 +38,7 @@ ingress:
     #       # nginx.ingress.kubernetes.io/ssl-redirect: "true"
     #       # kubernetes.io/ingress.class: nginx
     #       # nginx.ingress.kubernetes.io/auth-type: basic
-    #       # nginx.ingress.kubernetes.io/auth-secret: cortex-basic-auth-prom-push
+    #       # nginx.ingress.kubernetes.io/auth-secret: mimir-basic-auth-prom-push
     #       # nginx.ingress.kubernetes.io/auth-secret-type: auth-map
     #     # host: chart.local
     #     # paths:
@@ -118,10 +117,3 @@ nginx:
   extraVolumes: []
   extraVolumeMounts: []
   extraPorts: []
-
-
-
-config:
-  auth_enabled: true
-  server:
-    http_listen_port: 8080

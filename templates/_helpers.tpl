@@ -2,8 +2,8 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "cortex.name" -}}
-{{- .Values.cortex.releaseName | trunc 63 | trimSuffix "-" -}}
+{{- define "mimir.name" -}}
+{{- .Values.mimir.releaseName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -11,20 +11,20 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "cortex.fullname" -}}
-{{- .Values.cortex.releaseName | trunc 63 | trimSuffix "-" -}}
+{{- define "mimir.fullname" -}}
+{{- .Values.mimir.releaseName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "cortex.chart" -}}
+{{- define "mimir.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 
 {{/*
-Create the app name of cortex clients. Defaults to the same logic as "cortex.fullname", and default client expects "prometheus".
+Create the app name of mimir clients. Defaults to the same logic as "mimir.fullname", and default client expects "prometheus".
 */}}
 {{- define "client.name" -}}
 {{- if .Values.client.name -}}
@@ -39,4 +39,27 @@ Create the app name of cortex clients. Defaults to the same logic as "cortex.ful
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
+
+
+{{/*
+Alertmanager http prefix
+*/}}
+{{- define "mimir.alertmanagerHttpPrefix" -}}
+{{ default "/alertmanager"  .Values.mimir.alertmanagerHttpPrefix }}
+{{- end -}}
+
+
+{{/*
+Prometheus http prefix
+*/}}
+{{- define "mimir.prometheusHttpPrefix" -}}
+{{ default "/prometheus" .Values.mimir.prometheusHttpPrefix  }}
+{{- end -}}
+
+{{/*
+Internal servers http listen port - derived from Mimir default
+*/}}
+{{- define "mimir.serverHttpListenPort" -}}
+{{  default "8080" .Values.mimir.serverHttpListenPort }}
 {{- end -}}

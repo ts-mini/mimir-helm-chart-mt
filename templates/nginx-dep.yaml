@@ -2,11 +2,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "cortex.fullname" . }}-nginx
+  name: {{ template "mimir.fullname" . }}-nginx
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-nginx
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "mimir.name" . }}-nginx
+    chart: {{ template "mimir.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
@@ -15,15 +15,15 @@ spec:
   replicas: {{ .Values.nginx.replicas }}
   selector:
     matchLabels:
-      app: {{ template "cortex.name" . }}-nginx
+      app: {{ template "mimir.name" . }}-nginx
       release: {{ .Release.Name }}
   strategy:
     {{- toYaml .Values.nginx.strategy | nindent 4 }}
   template:
     metadata:
       labels:
-        app: {{ template "cortex.name" . }}-nginx
-        name: {{ template "cortex.name" . }}-nginx
+        app: {{ template "mimir.name" . }}-nginx
+        name: {{ template "mimir.name" . }}-nginx
         release: {{ .Release.Name }}
         {{- with .Values.nginx.podLabels }}
         {{- toYaml . | nindent 8 }}
@@ -92,7 +92,7 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ template "cortex.fullname" . }}-nginx
+            name: {{ template "mimir.fullname" . }}-nginx
 {{- if .Values.nginx.extraVolumes }}
 {{ toYaml .Values.nginx.extraVolumes | indent 8}}
 {{- end }}

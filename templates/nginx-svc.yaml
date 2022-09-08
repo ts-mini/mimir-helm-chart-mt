@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "cortex.fullname" . }}
+  name: {{ template "mimir.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "cortex.name" . }}-nginx
-    chart: {{ template "cortex.chart" . }}
+    app: {{ template "mimir.name" . }}-nginx
+    chart: {{ template "mimir.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- with .Values.nginx.labels }}
@@ -22,6 +22,6 @@ spec:
       name: http-metrics
       targetPort: http-metrics
   selector:
-    app: {{ template "cortex.name" . }}-nginx
+    app: {{ template "mimir.name" . }}-nginx
     release: {{ .Release.Name }}
 {{- end }}
