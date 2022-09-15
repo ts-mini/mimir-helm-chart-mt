@@ -61,12 +61,12 @@ data:
           proxy_pass      http://{{ template "mimir.fullname" . }}-ingester-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
         }
 
-        # Distributor endpoints
-        location /distributor {
-          proxy_pass      http://{{ template "mimir.fullname" . }}-distributor-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
+        location /memberlist {
+          proxy_pass      http://{{ template "mimir.fullname" . }}-ingester-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}/memberlist;
         }
 
-        location /memberlist {
+        # Distributor endpoints
+        location /distributor {
           proxy_pass      http://{{ template "mimir.fullname" . }}-distributor-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
         }
 
@@ -78,12 +78,16 @@ data:
         location {{ template "mimir.alertmanagerHttpPrefix" . }} {
           proxy_pass      http://{{ template "mimir.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
         }
-        location = /multitenant_alertmanager/status {
-          proxy_pass      http://{{ template "mimir.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
-        }
+
         location = /api/v1/alerts {
           proxy_pass      http://{{ template "mimir.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
         }
+
+        location = /multitenant_alertmanager/status {
+          proxy_pass      http://{{ template "mimir.fullname" . }}-alertmanager.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
+        }
+
+
 
         # Ruler endpoints
         location {{ template "mimir.prometheusHttpPrefix" . }}/config/v1/rules {
