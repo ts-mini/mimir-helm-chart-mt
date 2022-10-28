@@ -1,4 +1,5 @@
 {{- $root := . -}}
+{{- $fullName := include "mimir.fullname" . -}}
 {{- $svcPort := .Values.nginx.http_listen_port -}}
 {{- if and .Values.ingress.enabled .Values.nginx.enabled .Values.ingress.distributor.enabled -}}
 {{- range .Values.ingress.distributor.scopeIDs }}
@@ -31,13 +32,15 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          - path: /api/v1/push
+        {{- range .paths }}
+          - path: {{ . }}
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ template "mimir.fullname" $root }}
+                name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
+        {{- end }}
 ---
 {{- end }}
 {{- end }}
