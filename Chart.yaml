@@ -1,5 +1,5 @@
 apiVersion: v2
-version: 0.0.1
+version: 1.0.0
 appVersion: v1.1.0
 description: 'Mimir MultiTenant'
 engine: gotpl
@@ -7,8 +7,8 @@ home: https://mimirmetrics.io/
 icon: https://avatars2.githubusercontent.com/u/43045022?s=200&v=4
 kubeVersion: ^1.10.0-0
 maintainers:
-- email: tyler.horvath@gmail.com
-  name: Tyler Horvath
+  - email: tyler.horvath@gmail.com
+    name: Tyler Horvath
 name: mimir-mt
 sources:
-- https://github.com/ts-mini/mimir-helm-chart-mt
+  - https://github.com/ts-mini/mimir-helm-chart-mt
