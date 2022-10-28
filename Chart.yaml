@@ -1,6 +1,6 @@
 apiVersion: v2
 version: 1.0.0
-appVersion: v1.1.0
+appVersion: v1.1.1
 description: 'Mimir MultiTenant'
 engine: gotpl
 home: https://mimirmetrics.io/
