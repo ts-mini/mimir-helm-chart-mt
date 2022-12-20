@@ -57,15 +57,16 @@ data:
           return 200 'alive';
         }
 
-        location /ingester {
-          proxy_pass      http://{{ template "mimir.fullname" . }}-ingester-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
-        }
 
         location /memberlist {
           proxy_pass      http://{{ template "mimir.fullname" . }}-ingester-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}/memberlist;
         }
 
         # Distributor endpoints
+        location /ingester/ring {
+          proxy_pass      http://{{ template "mimir.fullname" . }}-distributor-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
+        }
+
         location /distributor {
           proxy_pass      http://{{ template "mimir.fullname" . }}-distributor-headless.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.mimir.serverHttpListenPort }}$request_uri;
         }
